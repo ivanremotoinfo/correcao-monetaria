@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<!-- saved from url=(0074)file:///C:/Users/Ivan%20-%20SuporteADV/Downloads/correcao-monetaria_1.html -->
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Correção Monetária | SuporteADV</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #0d0d0d;
+    color: #e0e0e0;
+    padding: 24px 16px;
+  }
+
+  .container { max-width: 700px; margin: 0 auto; }
+
+  .header {
+    text-align: center;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #222;
+  }
+
+  h1 { font-size: 1.5rem; color: #008080; margin-bottom: 6px; letter-spacing: 0.03em; }
+
+  .subtitle { font-size: 0.88rem; color: #888; line-height: 1.5; }
+
+  .brand { font-size: 0.78rem; margin-top: 8px; color: #555; }
+  .brand span.s { color: #8B00FF; font-weight: 700; }
+  .brand span.a { color: #008080; font-weight: 700; }
+
+  .card {
+    background: #111;
+    border-radius: 10px;
+    border: 1px solid #222;
+    border-left: 3px solid #8B00FF;
+    padding: 20px 22px;
+    margin-bottom: 14px;
+  }
+
+  .card-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #008080;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 500px) { .form-grid { grid-template-columns: 1fr; } }
+
+  .field label {
+    display: block;
+    font-size: 0.78rem;
+    color: #888;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .field input, .field select {
+    width: 100%;
+    padding: 9px 11px;
+    border: 1.5px solid #333;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #fff;
+    background: #1a1a1a;
+    transition: border-color 0.2s;
+  }
+
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: #008080;
+    box-shadow: 0 0 0 2px rgba(0,128,128,0.2);
+  }
+
+  .field select option { background: #1a1a1a; }
+
+  .btn-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  button {
+    background: #008080;
+    color: #fff;
+    border: none;
+    padding: 10px 26px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    cursor: pointer;
+    transition: background 0.18s, box-shadow 0.18s;
+    text-transform: uppercase;
+  }
+  button:hover { background: #006666; box-shadow: 0 0 10px rgba(0,128,128,0.4); }
+  button:active { background: #004d4d; }
+  button:disabled { background: #333; color: #666; cursor: not-allowed; box-shadow: none; }
+
+  .loading {
+    font-size: 0.85rem;
+    color: #008080;
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+  .loading.visible { display: flex; }
+
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid #333;
+    border-top-color: #008080;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .resultado {
+    background: #0a1a0a;
+    border: 1px solid #1a4a1a;
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-top: 14px;
+    display: none;
+  }
+  .resultado.visible { display: block; }
+
+  .resultado-titulo {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #008080;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .resultado-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 500px) { .resultado-grid { grid-template-columns: 1fr; } }
+
+  .resultado-item label {
+    display: block;
+    font-size: 0.72rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  .resultado-item .valor {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+  }
+
+  .resultado-item .valor.destaque {
+    font-size: 1.4rem;
+    color: #00ff00;
+  }
+
+  .resultado-item .valor.secundario { color: #888; font-size: 1rem; }
+
+  .divider { border: none; border-top: 1px solid #1a3a1a; margin: 14px 0; }
+
+  .aviso {
+    font-size: 0.75rem;
+    color: #555;
+    margin-top: 12px;
+    line-height: 1.5;
+  }
+
+  .erro {
+    background: #1a0a0a;
+    border: 1px solid #4a1a1a;
+    border-radius: 8px;
+    padding: 14px 16px;
+    color: #ff6666;
+    font-size: 0.88rem;
+    margin-top: 14px;
+    display: none;
+  }
+  .erro.visible { display: block; }
+
+  .indices-detalhe {
+    margin-top: 12px;
+    font-size: 0.78rem;
+    color: #555;
+  }
+  .indices-detalhe summary {
+    cursor: pointer;
+    color: #008080;
+    font-size: 0.78rem;
+    margin-bottom: 6px;
+  }
+  .indices-detalhe table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+  }
+  .indices-detalhe th {
+    text-align: left;
+    font-size: 0.72rem;
+    color: #666;
+    padding: 4px 8px;
+    border-bottom: 1px solid #222;
+    text-transform: uppercase;
+  }
+  .indices-detalhe td {
+    font-size: 0.78rem;
+    color: #999;
+    padding: 4px 8px;
+    border-bottom: 1px solid #1a1a1a;
+  }
+  .indices-detalhe tr:hover td { background: #151515; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>Correção Monetária</h1>
+    <p class="subtitle">Corrija valores pelo IPCA ou IGP-M com dados oficiais do Banco Central do Brasil.</p>
+    <p class="brand"><span class="s">suporte</span><span class="a">ADV</span>.br — Ferramentas para Advogados</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Dados para Correção</div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>Valor original (R$)</label>
+        <input type="number" id="valor" placeholder="Ex: 10000,00" step="0.01" min="0">
+      </div>
+      <div class="field">
+        <label>Índice de correção</label>
+        <select id="indice">
+          <option value="433">IPCA — Inflação oficial</option>
+          <option value="189">IGP-M — Contratos e aluguéis</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Data inicial (mês/ano)</label>
+        <input type="month" id="dataInicial">
+      </div>
+      <div class="field">
+        <label>Data final (mês/ano)</label>
+        <input type="month" id="dataFinal" max="2026-06">
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button id="btnCalcular" onclick="calcular()">CALCULAR</button>
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <span>Consultando Banco Central...</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="erro" id="erro"></div>
+
+  <div class="resultado" id="resultado">
+    <div class="resultado-titulo">Resultado da Correção</div>
+    <div class="resultado-grid">
+      <div class="resultado-item">
+        <label>Valor original</label>
+        <div class="valor secundario" id="res-original">—</div>
+      </div>
+      <div class="resultado-item">
+        <label>Período corrigido</label>
+        <div class="valor secundario" id="res-periodo">—</div>
+      </div>
+      <div class="resultado-item">
+        <label>Índice acumulado</label>
+        <div class="valor" id="res-indice">—</div>
+      </div>
+      <div class="resultado-item">
+        <label>Variação em R$</label>
+        <div class="valor" id="res-variacao">—</div>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="resultado-item" style="text-align:center">
+      <label style="text-align:center">Valor corrigido</label>
+      <div class="valor destaque" id="res-final">—</div>
+    </div>
+    <details class="indices-detalhe" id="detalhe-wrap">
+      <summary>Ver índices mês a mês</summary>
+      <table id="tabela-indices">
+        <thead><tr><th>Mês/Ano</th><th>Variação %</th><th>Acumulado %</th></tr></thead>
+        <tbody id="tabela-body"></tbody>
+      </table>
+    </details>
+    <p class="aviso" id="res-fonte">Fonte: Banco Central do Brasil — SGS/BCB</p>
+  </div>
+
+</div>
+
+<script>
+// Pré-define datas: inicial = 12 meses atrás, final = mês atual
+(function() {
+  const hoje = new Date();
+  const fim = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}`;
+  const inicioDate = new Date(hoje.getFullYear(), hoje.getMonth() - 12, 1);
+  const inicio = `${inicioDate.getFullYear()}-${String(inicioDate.getMonth()+1).padStart(2,'0')}`;
+  document.getElementById('dataInicial').value = inicio;
+  document.getElementById('dataFinal').value = fim;
+  document.getElementById('dataFinal').max = fim;
+})();
+
+function fmtMoeda(v) {
+  return 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function fmtPct(v) {
+  return (v >= 0 ? '+' : '') + v.toFixed(4).replace('.', ',') + '%';
+}
+
+function showErro(msg) {
+  const el = document.getElementById('erro');
+  el.textContent = msg;
+  el.classList.add('visible');
+  document.getElementById('resultado').classList.remove('visible');
+}
+
+function hideErro() {
+  document.getElementById('erro').classList.remove('visible');
+}
+
+async function calcular() {
+  hideErro();
+
+  const valor = parseFloat(document.getElementById('valor').value);
+  const indice = document.getElementById('indice').value;
+  const dataIni = document.getElementById('dataInicial').value;
+  const dataFim = document.getElementById('dataFinal').value;
+
+  if (!valor || isNaN(valor) || valor <= 0) return showErro('Informe um valor original válido.');
+  if (!dataIni || !dataFim) return showErro('Informe as datas inicial e final.');
+  if (dataIni >= dataFim) return showErro('A data inicial deve ser anterior à data final.');
+
+  const [anoIni, mesIni] = dataIni.split('-').map(Number);
+  const [anoFim, mesFim] = dataFim.split('-').map(Number);
+  const diffMeses = (anoFim - anoIni) * 12 + (mesFim - mesIni);
+  if (diffMeses > 360) return showErro('Período máximo: 30 anos.');
+
+  const btn = document.getElementById('btnCalcular');
+  const loading = document.getElementById('loading');
+  btn.disabled = true;
+  loading.classList.add('visible');
+
+  // Formata datas para a API do BCB: dd/MM/yyyy
+  const dtIni = `01/${String(mesIni).padStart(2,'0')}/${anoIni}`;
+  const dtFim = `01/${String(mesFim).padStart(2,'0')}/${anoFim}`;
+
+  // Usa proxy para contornar CORS
+  const apiUrl = `https://api.bcb.gov.br/dados/serie/bcdata.sgs.${indice}/dados?formato=json&dataInicial=${dtIni}&dataFinal=${dtFim}`;
+  const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
+
+  try {
+    const resp = await fetch(proxyUrl);
+    if (!resp.ok) throw new Error('Erro ao acessar o Banco Central.');
+    const json = await resp.json();
+    const dados = JSON.parse(json.contents);
+
+    if (!dados || dados.length === 0) throw new Error('Sem dados para o período informado. Verifique as datas.');
+
+    // Calcula índice acumulado
+    let fator = 1;
+    const linhas = [];
+    let acumulado = 0;
+
+    dados.forEach(item => {
+      const variacao = parseFloat(item.valor.replace(',', '.'));
+      fator *= (1 + variacao / 100);
+      acumulado += variacao;
+      linhas.push({ data: item.data, variacao, acumulado });
+    });
+
+    const valorCorrigido = valor * fator;
+    const variacaoReais = valorCorrigido - valor;
+    const variacaoPct = (fator - 1) * 100;
+
+    // Exibe resultado
+    const nomeIndice = indice === '433' ? 'IPCA' : 'IGP-M';
+    const periodoLabel = `${String(mesIni).padStart(2,'0')}/${anoIni} → ${String(mesFim).padStart(2,'0')}/${anoFim}`;
+
+    document.getElementById('res-original').textContent = fmtMoeda(valor);
+    document.getElementById('res-periodo').textContent = periodoLabel;
+    document.getElementById('res-indice').textContent = fmtPct(variacaoPct);
+    document.getElementById('res-variacao').textContent = fmtMoeda(variacaoReais);
+    document.getElementById('res-final').textContent = fmtMoeda(valorCorrigido);
+    document.getElementById('res-fonte').textContent =
+      `Fonte: Banco Central do Brasil — ${nomeIndice} (SGS ${indice}) | ${dados.length} meses considerados`;
+
+    // Tabela detalhada
+    const tbody = document.getElementById('tabela-body');
+    tbody.innerHTML = '';
+    linhas.forEach(l => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${l.data}</td><td>${fmtPct(l.variacao)}</td><td>${fmtPct(l.acumulado)}</td>`;
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById('resultado').classList.add('visible');
+
+  } catch (e) {
+    showErro('Não foi possível buscar os dados: ' + (e.message || 'Erro desconhecido. Tente novamente.'));
+  } finally {
+    btn.disabled = false;
+    loading.classList.remove('visible');
+  }
+}
+
+// Enter para calcular
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const focused = document.activeElement;
+    if (focused && (focused.tagName === 'INPUT' || focused.tagName === 'SELECT')) {
+      calcular();
+    }
+  }
+});
+</script>
+
+
+</body></html>

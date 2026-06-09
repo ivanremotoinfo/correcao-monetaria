@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0074)file:///C:/Users/Ivan%20-%20SuporteADV/Downloads/correcao-monetaria_1.html -->
+<!-- saved from url=(0074)file:///C:/Users/Ivan%20-%20SuporteADV/Downloads/correcao-monetaria_2.html -->
 <html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -372,15 +372,38 @@ async function calcular() {
   const dtIni = `01/${String(mesIni).padStart(2,'0')}/${anoIni}`;
   const dtFim = `01/${String(mesFim).padStart(2,'0')}/${anoFim}`;
 
-  // Usa proxy para contornar CORS
   const apiUrl = `https://api.bcb.gov.br/dados/serie/bcdata.sgs.${indice}/dados?formato=json&dataInicial=${dtIni}&dataFinal=${dtFim}`;
-  const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
+
+  const proxies = [
+    u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
+    u => `https://api.allorigins.win/get?url=${encodeURIComponent(u)}`,
+    u => `https://thingproxy.freeboard.io/fetch/${u}`,
+  ];
+
+  async function fetchComProxy(url) {
+    // Tenta direto primeiro
+    try {
+      const r = await fetch(url, { mode: 'cors' });
+      if (r.ok) { const d = await r.json(); return d; }
+    } catch(_) {}
+
+    // Tenta cada proxy
+    for (const proxy of proxies) {
+      try {
+        const r = await fetch(proxy(url));
+        if (!r.ok) continue;
+        const j = await r.json();
+        // allorigins retorna { contents: "..." }
+        if (j && j.contents) return JSON.parse(j.contents);
+        // corsproxy e thingproxy retornam o JSON direto
+        if (Array.isArray(j)) return j;
+      } catch(_) {}
+    }
+    throw new Error('Não foi possível conectar ao Banco Central. Tente novamente em instantes.');
+  }
 
   try {
-    const resp = await fetch(proxyUrl);
-    if (!resp.ok) throw new Error('Erro ao acessar o Banco Central.');
-    const json = await resp.json();
-    const dados = JSON.parse(json.contents);
+    const dados = await fetchComProxy(apiUrl);
 
     if (!dados || dados.length === 0) throw new Error('Sem dados para o período informado. Verifique as datas.');
 
